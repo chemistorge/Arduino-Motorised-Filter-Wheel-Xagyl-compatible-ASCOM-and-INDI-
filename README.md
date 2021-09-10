@@ -1,5 +1,5 @@
 # Arduino-Motorised-Filter-Wheel-Xagyl-compatible-ASCOM-and-INDI-
-A 3d printable motorised filter wheel. The wheel is motorised with a 28BYJ-48 stepper with control provided by an Arduino Uno. The firmware is compatible with Xagyl Indi and ASCOM drivers.
+A 3d printable motorised filter wheel. The wheel is motorised with a 28BYJ-48 stepper with control provided by an Arduino Nano. The firmware is compatible with Xagyl Indi and ASCOM drivers.
 
 
 I was in the market for a filter wheel, but didn't want to spend the money. I had recently got access to Fusion 360 and fancied desigining my own to print on my Ender 3 V2 printer.
