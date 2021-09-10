@@ -18,3 +18,5 @@ There are two versions of the filter back plate (M42, and M48) design for either
 The sensor used was an analog Hall Sensor from the 37 in 1 kit of sensors. The magnet used was 12mm x 2mm disc (fits into the raise part of the wheel), but any sized magnet <12 mm OD and <= 2 mm thickness will do.
 
 Main filter box is held together with M3 bolts and nuts (~15 mm). The circuitry lid uses M3 bolts that screw into plastic.
+
+Link to Discussion on Stargazer Lounge: https://stargazerslounge.com/topic/382864-diy-3d-printable-motorised-125-filter-wheel-ascom-and-indi/
