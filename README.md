@@ -17,7 +17,7 @@ There are two versions of the filter back plate (M42, and M48) design for either
 
 The sensor used was an analog Hall Sensor from the 37 in 1 kit of sensors. The magnet used was 12mm x 2mm disc (fits into the raise part of the wheel), but any sized magnet <12 mm OD and <= 2 mm thickness will do. (if you would like help with using a digital Hall Sensor please contact me, the two lines in the code that needs changing are commented in the Locate_Home() function). The sensor threshold value may need changing in the Locate_Home() function too depending on magnet choosen.
 
-Main filter box is held together with M3 bolts and nuts (~15 mm). The circuitry lid uses M3 bolts that screw into plastic.
+Main filter box is held together with M3 bolts and nuts (~25 mm). The circuitry lid uses M3 bolts that screw into plastic.
 
 You may need to install the CH340 serial drivers for the arduino nano if using Mac or Windows (Linux supports natively). See here for help: https://learn.sparkfun.com/tutorials/how-to-install-ch340-drivers/all
 
