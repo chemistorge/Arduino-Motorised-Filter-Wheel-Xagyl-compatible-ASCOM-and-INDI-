@@ -15,6 +15,13 @@
 #define maxSpeed 400                      // max motor speed
 #define Speed 400                      //current speed 
 #define setAccel 1000                     // stepper accelaration 
+
+//CHANGE THESE SETTINGS TO SET UP EITHER ANALOG OR DIGITAL HALL SENSOR
+
+#define analogSensorThreshold 430
+#define HALLSENSORTYPE 1 // SET to 1 for ANALOG HALL Sensor, CHANGE to 2 for DIGITAL HALL SENSOR
+#define HALLACTIVETYPE 1 // SET to 1 for ACTIVE HIGH Digital Sensor, CHANGE to 2 for ACTIVE LOW digital Sensor
+
 const int filterPos[] = {0, 56, 466, 876, 1286, 1696}; //Rough alignment of filterPos
 const String I_Strings[] = {"Chemistorge_Filter_1.0", "FW3.1.5", "P", "S/N:001", "Max Speed " + String(maxSpeed), "Jitter 1", "PX Offset " ,"Theshold 1", "FilterSlots 5", "Pulse Width 4950uS" };
 
@@ -71,11 +78,23 @@ bool Locate_Home() { //locate home
   stepper.moveTo(3000); //set move to as 3000 (one rotation is ~2000 steps so if not homed by then raise error.
   do {
     stepper.run(); //run the stepper one step at a time
-    HallValue = analogRead(SENSOR); //change if using digital hall.
+    #if HALLSENSORTYPE == 1
+      HallValue = analogRead(SENSOR); //analog sensor
+    #elif HALLSENSORTYPE == 2
+      HallValue = digitalRead(SENSOR); //digital sensor
+    #endif
     if (stepper.distanceToGo() <= 0) { // if we have moved to 3000 then raise error.
       return true;
     }
-  } while (HallValue > 430); //change if using digital hall. //once hall sensor is less than 430 we are at the home position.
+#if HALLSENSORTYPE == 1
+  } while (HallValue > analogSensorThreshold); //analog sensor
+#elif HALLSENSORTYPE == 2
+  #if HALLACTIVETYPE == 1
+  } while (HallValue == LOW); //active HIGH digital sensor
+  #elif HALLACTIVETYPE == 2
+  } while (HallValue == HIGH); //active LOW digital sensor
+  #endif
+#endif
   stepper.stop(); //stop stepper as we have homed.
   stepper.setCurrentPosition(0); // set stepper position as 0 (home).
   currPos = 0; //set filter position as 0 (i.e homed).
