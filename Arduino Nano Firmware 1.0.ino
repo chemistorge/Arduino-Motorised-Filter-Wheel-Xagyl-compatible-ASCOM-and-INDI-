@@ -18,7 +18,7 @@
 
 //CHANGE THESE SETTINGS TO SET UP EITHER ANALOG OR DIGITAL HALL SENSOR
 
-#define analogSensorThreshold 430
+#define analogSensorThreshold 430 // set the threshold below which the homing sensor is triggered
 #define HALLSENSORTYPE 1 // SET to 1 for ANALOG HALL Sensor, CHANGE to 2 for DIGITAL HALL SENSOR
 #define HALLACTIVETYPE 1 // SET to 1 for ACTIVE HIGH Digital Sensor, CHANGE to 2 for ACTIVE LOW digital Sensor
 
