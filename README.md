@@ -15,7 +15,7 @@ This GitHub contains the full 3d Printing Files and arduino firmware. The filter
 
 There are two versions of the filter back plate (M42, and M48) design for either T2 connection or 48 mm common on coma correctors. The filter wheel introduces 21 mm back focus so is designed to replace a ZWO 21 mmm spacer.
 
-The sensor used was an analog Hall Sensor from the 37 in 1 kit of sensors. The magnet used was 12mm x 2mm disc (fits into the raise part of the wheel), but any sized magnet <12 mm OD and <= 2 mm thickness will do. (if you would like help with using a digital Hall Sensor please contact me, the two lines in the code that needs changing are commented in the Locate_Home() function). The sensor threshold value may need changing in the Locate_Home() function too depending on magnet choosen.
+The sensor used was an analog Hall Sensor from the 37 in 1 kit of sensors. The magnet used was 12mm x 2mm disc (fits into the raise part of the wheel), but any sized magnet <12 mm OD and <= 2 mm thickness will do. (if you would like help with using a digital Hall Sensor please contact me, the top part of the code has defines that can be changed to select analogue and digital hall sensors.
 
 Main filter box is held together with M3 bolts and nuts (~25 mm). The circuitry lid uses M3 bolts that screw into plastic.
 
