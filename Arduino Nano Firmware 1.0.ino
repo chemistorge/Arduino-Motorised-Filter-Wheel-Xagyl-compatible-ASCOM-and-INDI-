@@ -14,7 +14,8 @@
 #define downButton 4 //Down BUtton Pin
 #define maxSpeed 400                      // max motor speed
 #define Speed 400                      //current speed 
-#define setAccel 1000                     // stepper accelaration 
+#define setAccel 1000                     // stepper accelaration
+#define buzzerPin 3 //buzzer pin D3
 
 //CHANGE THESE SETTINGS TO SET UP EITHER ANALOG OR DIGITAL HALL SENSOR
 
@@ -72,6 +73,13 @@ void motor_Off() {                                            //power down the s
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, LOW);
 }
+
+void playTone(int beeps) {     //play tone to indicate filter position
+  for (int i = 0; i < beeps; i++) {
+    tone(buzzerPin, 1000, 100);
+    delay(200);
+  }
+}
 bool Locate_Home() { //locate home
   int HallValue;
   stepper.runToNewPosition(stepper.currentPosition() - 500); //back magnet off sensor
@@ -109,6 +117,7 @@ void goToLocation(int newPos) { //got to new position.
   }
   stepper.runToNewPosition(filterPos[newPos] + posOffset[newPos-1]); //run for from current position to new and include offsets.
   currPos = newPos; //update position
+  playTone(currPos); //number tones to indicate position
   motor_Off(); //turn off motor coil to save power.
 }
 
