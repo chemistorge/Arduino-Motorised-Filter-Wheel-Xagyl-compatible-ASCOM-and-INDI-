@@ -11,7 +11,7 @@ I found this GIThub: https://github.com/Blueshawk/Rayz-indi-wheel with an arduin
 
 While the existing code sort of worked I found it very buggy and with a high latency for serial commands. Also I could not get it working with ASCOM drivers. 
 
-This GitHub contains the full 3d Printing Files and arduino firmware. The filter wheel is recongnised by both Indi and Ascom, functionally it is limited to changing filters and setting offsets. There is also in the design two buttons that can phyically change filters manually.
+This GitHub contains the full 3d Printing Files and arduino firmware. The filter wheel is recongnised by both Indi and Ascom, functionally it is limited to changing filters and setting offsets. There is also in the design two buttons that can phyically change filters manually. Also a buzzer or led can be included to have local confirmation of which filter has just been selected.
 
 There are two versions of the filter back plate (M42, and M48) design for either T2 connection or 48 mm common on coma correctors. The filter wheel introduces 21 mm back focus so is designed to replace a ZWO 21 mmm spacer.
 
