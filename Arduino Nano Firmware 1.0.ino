@@ -347,6 +347,7 @@ void setup()
   pinMode(upButton, INPUT_PULLUP); // button pins as input with pull up resister (active low).
   pinMode(downButton, INPUT_PULLUP);
   pinMode(buzzerPin, OUTPUT);
+  pinMode(ledPin, OUTPUT);
   stepper.setCurrentPosition(0);     // set stepper position = 0
   stepper.setMaxSpeed(maxSpeed);     // set max speer
   stepper.setSpeed(Speed);           // set speed
