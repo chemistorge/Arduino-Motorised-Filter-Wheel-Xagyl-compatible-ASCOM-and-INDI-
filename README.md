@@ -24,3 +24,6 @@ You may need to install the CH340 serial drivers for the arduino nano if using M
 Link to Discussion on Stargazer Lounge: https://stargazerslounge.com/topic/382864-diy-3d-printable-motorised-125-filter-wheel-ascom-and-indi/
 
 Link to Discussion on Cloudy Nights: https://www.cloudynights.com/topic/788950-3d-printable-motorised-125-filter-wheel-ascom-and-indi-compatible/
+
+
+Arduino code now updated to allow wheels with any number of filters.
