@@ -11,8 +11,7 @@
 
 // SETTINGS - MAIN PARAMETERS
 #define stepsPerRevolution 2048  //set number motor steps for wheel to rotate once
-#define offSetResolution 5       //number of motor steps for one offset change
-#define homingOffsetSteps 56     // number of steps from homing point to centre of first filter
+
 
 // SETTINGS - MOTOR
 #define IN1 9  // unipolar motor pins (set all pins)
@@ -23,9 +22,8 @@
 
 
 // SETTINGS - HALL SENSOR
-#define analogSensorThreshold 430  // set the threshold below which the homing sensor is triggered
-#define HALLSENSORTYPE 2           // SET to 1 for ANALOG HALL Sensor, CHANGE to 2 for DIGITAL HALL SENSOR
-#define HALLACTIVETYPE 2           // SET to 1 for ACTIVE HIGH Digital Sensor, CHANGE to 2 for ACTIVE LOW digital Sensor
+
+
 
 #if motorType == 1
 AccelStepper stepper(4, IN1, IN3, IN2, IN4);  // Initialise UniPolar Motor
@@ -38,9 +36,14 @@ AccelStepper stepper(1, IN2, IN4);  //Initialise Motor Driver (e.g. A4988)
 // Variable
 
 bool Error = false;  // homing error flag
-int homingType = 0;
-int sensorLimitValue = 512;
-
+bool homingSensorFound = true;
+int homingType = 4;
+int sensorLimitMaxValue = 512;
+int sensorLimitMinValue = 512;
+bool runOnce = true;
+int analogSensorThreshold = 430;  // set the threshold below which the homing sensor is triggered
+bool sensorTypeIsDigtial = true;
+bool activeHIGH;
 
 
 
@@ -64,7 +67,7 @@ bool Locate_Home() {  // locate home
   int HallValue;
   stepper.runToNewPosition(stepper.currentPosition() - 500);  // back magnet off sensor
   stepper.moveTo(stepsPerRevolution * 1.2);                   // set move to as 120% of full revelution so if not homed by then raise error.
-  if (homingType == 0) { //measure analog hall sensor voltage low trigger
+  if (homingType == 0) {                                      //measure analog hall sensor voltage low trigger
     do {
       stepper.run();                      // run the stepper one step at a time
       HallValue = analogRead(SENSOR);     // analog sensor
@@ -73,7 +76,7 @@ bool Locate_Home() {  // locate home
       }
 
     } while (HallValue > analogSensorThreshold);  // analog sensor
-  } else if (homingType == 1) {//measure analog Hall Sensor voltage high trigger
+  } else if (homingType == 1) {                   //measure analog Hall Sensor voltage high trigger
     do {
       stepper.run();                      // run the stepper one step at a time
       HallValue = analogRead(SENSOR);     // analog sensor
@@ -82,7 +85,7 @@ bool Locate_Home() {  // locate home
       }
 
     } while (HallValue < analogSensorThreshold);  // analog sensor
-  } else if (homingType == 2) { //measure digital High Trigger
+  } else if (homingType == 2) {                   //measure digital High Trigger
     do {
       stepper.run();                      // run the stepper one step at a time
       HallValue = digitalRead(SENSOR);    // digital sensor
@@ -90,29 +93,48 @@ bool Locate_Home() {  // locate home
         return true;
       }
     } while (HallValue == LOW);  // active HIGH digital sensor
-  } else if (homingType == 3) { //measure digtial LOW Trigger
+  } else if (homingType == 3) {  //measure digtial LOW Trigger
     do {
       stepper.run();                      // run the stepper one step at a time
       HallValue = digitalRead(SENSOR);    // digital sensor
       if (stepper.distanceToGo() <= 0) {  // if we have moved to 3000 then raise error.
         return true;
       }
-    } while (HallValue == HIGH);  // active LOW digital sensor
-  } else if (homingType == 4) { //check is Hall Sensor is N or S detecting
+    } while (HallValue == HIGH);     // active LOW digital sensor
+  } else if (homingType == 4) {      //check is Hall Sensor is active HIGH or LOW
+    HallValue = analogRead(SENSOR);  // analog sensor
+
+    if (HallValue > 470 && HallValue < 530) {
+      sensorTypeIsDigtial = false;
+      Serial.println("sensor analog");
+      
+    }
+    if (sensorTypeIsDigtial) {
+      activeHIGH = HallValue < 300 ? true : false;
+      Serial.println("sensor digital");
+      return true;
+    }
+
     do {
-      stepper.run();                      // run the stepper one step at a time
-      HallValue = analogRead(SENSOR);     // analog sensor
-      if (HallValue > 600) {
-        if (HallValue > sensorLimitValue) {
-          sensorLimitValue = HallValue;
-        }
-      } else if (HallValue < 430) {
-        if (HallValue < sensorLimitValue) {
-          sensorLimitValue = HallValue;
-        }
+      stepper.run();                   // run the stepper one step at a time
+      HallValue = analogRead(SENSOR);  // analog sensor
+
+      if (HallValue > 529) {
+        sensorLimitMaxValue = HallValue;
+      }
+
+      if (HallValue < 471) {
+        sensorLimitMinValue = HallValue;
       }
 
     } while (stepper.distanceToGo() > 0);  // analog sensor
+    if (sensorLimitMaxValue > 529) {
+      activeHIGH = true;
+    } else if (sensorLimitMinValue < 471) {
+      activeHIGH = false;
+    } else {
+      homingSensorFound = false;
+    }
   }
   stepper.stop();                 // stop stepper as we have homed.
   stepper.setCurrentPosition(0);  // set stepper position as 0 (home).
@@ -141,34 +163,60 @@ void setup() {                 // runs once.
 
 
 
-  Error = Locate_Home();  // home
+  //Error = Locate_Home();  // home
 }
 
 void loop() {  // runs forever.
 
-  homingType = 4;
-  Locate_Home();
-  if (sensorLimitValue > 512) {
-    analogSensorThreshold = 650;
-    homingType = 1;
-    Locate_Home();
-  } else {
-    analogSensorThreshold = 430;
-    homingType = 0;
-    Locate_Home();
+  if (runOnce) {
+    homingType = 4;
+    Error = Locate_Home();
+    if (!Error && homingSensorFound) {
+      if (activeHIGH) {
+        analogSensorThreshold = sensorLimitMaxValue - 15;
+        homingType = 1;
+        Error = Locate_Home();
+        if (!Error) {
+          Serial.print("Sensor type is analog and active High with threshold of: ");
+          Serial.println(analogSensorThreshold);
+        } else {
+          Serial.println("Home Sensor not found");
+        }
+
+      } else {
+        analogSensorThreshold = sensorLimitMinValue + 15;
+        homingType = 0;
+        Error = Locate_Home();
+        if (!Error) {
+          Serial.print("Sensor type is analog and active low with threshold of: ");
+          Serial.println(analogSensorThreshold);
+        } else {
+          Serial.println("Home Sensor not found");
+        }
+      }
+    } else if (Error && homingSensorFound) {
+      if (activeHIGH) {
+        Error = false;
+        homingType = 2;
+        Error = Locate_Home();
+        if (!Error) {
+          Serial.println("Sensor type is Digital and Active High");
+        } else {
+          Serial.println("Home Sensor not found");
+        }
+      } else {
+        Error = false;
+        homingType = 3;
+        Error = Locate_Home();
+        if (!Error) {
+          Serial.println("Sensor type is Digital and Active Low");
+        } else {
+          Serial.println("Home Sensor not found");
+        }
+      }
+    } else {
+      Serial.println("Home Sensor not found");
+    }
   }
-  if (Error) {
-    Error = false;
-    homingType = 2;
-    Locate_Home();
-  } 
-  if (Error) {
-    Error = false;
-    homingType = 3;
-    Locate_Home();
-  }
-  if (Error) {  // if homing does not work print error.
-    Serial.println("Failed to find a homing sensor");
-    Error = false;
-  }
+  runOnce = false;
 }
