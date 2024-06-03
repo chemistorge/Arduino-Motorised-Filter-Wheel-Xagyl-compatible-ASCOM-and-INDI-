@@ -27,3 +27,7 @@ Link to Discussion on Cloudy Nights: https://www.cloudynights.com/topic/788950-3
 
 
 Arduino code now updated to allow wheels with any number of filters.
+
+UPDATE:
+
+The homing code file to determining sensor type has been completly rewritten and will not idenitfy if the senor is analog or digital and is active high or low. If analog it will suggest a threshold value. Use this to determine hall sensor type.
