@@ -119,11 +119,11 @@ bool Locate_Home() {  // locate home
       stepper.run();                   // run the stepper one step at a time
       HallValue = analogRead(SENSOR);  // analog sensor
 
-      if (HallValue > 529) {
+      if (HallValue > 529 && HallValue > sensorLimitMaxValue) {
         sensorLimitMaxValue = HallValue;
       }
 
-      if (HallValue < 471) {
+      if (HallValue < 471 && HallValue < sensorLimitMinValue) {
         sensorLimitMinValue = HallValue;
       }
 
