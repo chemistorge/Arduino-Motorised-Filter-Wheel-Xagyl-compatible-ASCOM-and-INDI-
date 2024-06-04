@@ -30,4 +30,4 @@ Arduino code now updated to allow wheels with any number of filters.
 
 UPDATE:
 
-The homing code file to determining sensor type has been completly rewritten and will not idenitfy if the senor is analog or digital and is active high or low. If analog it will suggest a threshold value. Use this to determine hall sensor type.
+The homing code file to determining sensor type has been completely rewritten and will now idenitfy if the senor is analog or digital and is active high or low. If analog it will suggest a threshold value. Use this to determine hall sensor type. Ensure that you set the motor steps per revolution before starting. Run the code several time to ensure consistent results, this is prevent false results due to magnet being aligned with sensor on start of run.
